@@ -46,6 +46,7 @@ public class SelectStationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(tag, "onCreate");
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_select_station);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -58,8 +59,11 @@ public class SelectStationActivity extends AppCompatActivity {
 
         //Init the spinners and the button
         this.spinnerCities = this.findViewById(R.id.spinnerCity);
+        Log.e(tag, "cities");
         this.spinnerStations = this.findViewById(R.id.spinnerStation);
+        Log.e(tag, "stations");
         this.buttonStation = this.findViewById(R.id.buttonStation);
+        Log.e(tag, "button");
 
         //init the arraylist to incorpore the information
         this.listCities = new ArrayList<>();
@@ -120,13 +124,20 @@ public class SelectStationActivity extends AppCompatActivity {
         loadCities();
         if(arrayCities.size()>0) {
             spinnerCities.setSelection(0);
+
+            Log.e(tag, "mayor");
+        }else {
+
+            Log.e(tag, "menor");
         }
     }
 
 
     //Search the cities and fill the spinner with the information
     private void loadCities(){
-        String url = "http://192.168.1.21:8080/UbicompServerExample/GetCities";
+        String url = "http://192.168.1.21:8080/ServerExampleUbicomp/GetCities";
+
+        Log.e(tag, "loadcities");
         ServerConnectionThread thread = new ServerConnectionThread(this, url);
         try {
             thread.join();
@@ -136,7 +147,7 @@ public class SelectStationActivity extends AppCompatActivity {
     //Search the stations of the selected city and fill the spinner with the information
     private void loadStations(final int cityId){
 
-        String url = "http://192.168.1.21:8080/UbicompServerExample/GetStationsCity?cityId="+cityId;
+        String url = "http://192.168.1.21:8080/ServerExampleUbicomp/GetStationsCity?cityId="+cityId;
         this.listStation = new ArrayList<>();
         this.arrayStations = new ArrayList<>();
         ServerConnectionThread thread = new ServerConnectionThread(this, url);

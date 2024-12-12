@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.*;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,6 +18,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.*;
 
 import java.io.UnsupportedEncodingException;
 
@@ -65,7 +65,10 @@ public class StationActivity extends AppCompatActivity {
         client = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.1.21:1883", clientId);
 
         try {
-            IMqttToken token = client.connect();
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setUserName("ubicua");
+            options.setPassword("ubicua".toCharArray());
+            IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -78,7 +81,7 @@ public class StationActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     // Something went wrong e.g. connection timeout or firewall problems
-                    Log.i(tag, "Error connecting MQTT");
+                    Log.i(tag, "Error connecting MQTT:" + exception);
                 }
             });
         } catch (MqttException e) {e.printStackTrace();}

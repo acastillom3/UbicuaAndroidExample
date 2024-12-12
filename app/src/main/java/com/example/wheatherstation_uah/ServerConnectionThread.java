@@ -19,12 +19,14 @@ class ServerConnectionThread extends Thread{
     public ServerConnectionThread(SelectStationActivity activ, String url)    {
         activity = activ;
         urlStr = url;
+
         start();
     }
 
     @Override
     public void run()    {
         String response = "";
+
         try {
             URL url = new URL(urlStr);
             HttpURLConnection urlConnection = null;
@@ -36,15 +38,19 @@ class ServerConnectionThread extends Thread{
             JSONArray jsonarray = new JSONArray(response);
             //Read Responses and fill the spinner
             if(urlStr.contains("GetCities")){
+
+                Log.e("SelectStation", "cities");
                 activity.setListCities(jsonarray);
             }else{
                 if (urlStr.contains("GetStationsCity")){
+                    Log.e("SelectStation", "stations");
                     activity.setListStations(jsonarray);
                 }
             }
         }
         catch (IOException | JSONException e) {
             e.printStackTrace();
+            Log.e(tag, "Error: " + e.getMessage());
         }
     }
     //Get the input strean and convert into String
